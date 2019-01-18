@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="schedule"> <!-- 테이블명 사용 -->
+  <insert id = "create" parameterType = "ScheduleVO">
+    INSERT INTO SCHEDULE(scheduleno, employeeno, work, work_startdate, work_enddate, start_time, end_time, visible)
+    VALUES ((SELECT NVL(MAX(scheduleno), 0)+1 as scheduleno FROM SCHEDULE), 1,
+    #{work}, #{work_startdate}, #{work_enddate}, #{start_time}, #{end_time}, #{visible})    
+  </insert>
+  
+  <select id = "list_all_schedule" resultType = "ScheduleVO">
+    SELECT scheduleno, employeeno, work, work_startdate, work_enddate, start_time, end_time, visible
+    FROM SCHEDULE
+    ORDER BY work_startdate ASC, start_time ASC
+  </select>
+  
+  <select id = "read_schedule" resultType="ScheduleVO" parameterType="int">
+    SELECT scheduleno, employeeno, work, work_startdate, work_enddate, start_time, end_time, visible
+    FROM SCHEDULE
+    WHERE scheduleno = #{scheduleno}
+  </select>
+  
+  <update id="update" parameterType = "ScheduleVO">
+    UPDATE SCHEDULE
+    SET work = #{work, jdbcType = VARCHAR}, work_startdate = #{work_startdate, jdbcType = VARCHAR}, work_enddate= #{work_enddate, jdbcType = VARCHAR},
+          start_time = #{start_time, jdbcType = VARCHAR}, end_time = #{end_time, jdbcType = VARCHAR}, visible = #{visible, jdbcType = VARCHAR}
+    WHERE scheduleno = #{scheduleno, jdbcType = NUMERIC} 
+  </update>
+  
+  <delete id = "delete_schedule" parameterType = "int">
+    DELETE FROM SCHEDULE
+    WHERE scheduleno = #{scheduleno}
+  </delete>
+  
+</mapper>
