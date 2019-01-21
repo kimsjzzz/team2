@@ -35,6 +35,11 @@
   
   <context:component-scan base-package="dev.mvc.team2" />
   <context:component-scan base-package="dev.mvc.schedule" />
+  <context:component-scan base-package="dev.mvc.employee" />
+  <context:component-scan base-package="dev.mvc.journal" />
+  <context:component-scan base-package="dev.mvc.management" />
+  <context:component-scan base-package="dev.mvc.paydescript" />
+  <context:component-scan base-package="dev.mvc.projectschedule" />
   
 <!-- 	<context:component-scan base-package="dev" /> -->
     
@@ -42,7 +47,6 @@
   <beans:bean id="multipartResolver"
     class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
   </beans:bean>
-
     
 </beans:beans>
 
