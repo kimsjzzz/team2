@@ -17,13 +17,6 @@ public interface ScheduleProcInter {
   public List<ScheduleVO> list_all_schedule();
   
   /**
-   * 일정 시작 날짜와 일정 종료 날짜가 올바른지 검사합니다.
-   * @param session
-   * @return true: 날짜의 순서가 올바름
-   */
-  public boolean checkDate(HttpSession session);
-  
-  /**
    * 일정 조회
    */
   public ScheduleVO read_schedule(int scheduleno);
@@ -37,6 +30,13 @@ public interface ScheduleProcInter {
    * 일정 삭제
    */
   public int delete_schedule(int scheduleno);
+  
+  /**
+   * 일정 시작 날짜와 일정 종료 날짜가 올바른지 검사합니다.
+   * @param session
+   * @return true: 날짜의 순서가 올바름
+   */
+  public int check_date(ScheduleVO scheduleVO);
   
 
 }

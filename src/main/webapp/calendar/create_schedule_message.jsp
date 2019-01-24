@@ -24,6 +24,10 @@
         <c:when test="${param.count == 1 }">
           <LI>새로운 일정을 등록했습니다.</LI>
         </c:when>
+        <c:when test="${param.count == 2 }">
+          <LI>등록하고자 하시는 날짜에 문제가 발생하여 </LI>
+          <LI>일정을 등록하지 못하였습니다.</LI>
+        </c:when>
         <c:otherwise>
           <LI>새로운 일정 등록에 실패했습니다.</LI>
         </c:otherwise>

@@ -57,13 +57,11 @@ System.out.println("선택 날짜: "+ start_date_value + "/ 실제 날짜"+ Loca
      </li>
      
      <li class='li_none'>
-        <label for='mname' class='label_basic'>공개 여부</label><br>
-          <label>
-            <input type='radio' name='visible' id='visible' value='Y' checked="checked"> 전체 공개
-          </label>
-          <label>
-            <input type='radio' name='visible' id='visible' value='N'> 비공개
-          </label>
+        <label for='visible'>공개 여부</label>
+       <select name='visible'>
+         <option value='Y' >전체공개</option>
+         <option value='N' selected="selected">비공개</option>
+       </select>
      </li>
      
       <li class='li_right'>

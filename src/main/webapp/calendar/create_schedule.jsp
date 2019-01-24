@@ -3,12 +3,18 @@
 <%@ page import = "java.text.SimpleDateFormat" %>
 <%@ page import = "nation.web.tool.Tool" %>
 <%@ page import = "javax.servlet.http.HttpSession" %>
+<%@ page import = "java.util.Date" %>
 
 <%
 /* int year = Integer.parseInt(request.getParameter("year"));
 int month = Integer.parseInt(request.getParameter("month")); 
 int day = Integer.parseInt(request.getParameter("day"));  */
 
+/* SimpleDateFormat sfm = new SimpleDateFormat("yyyy-MM-dd");
+SimpleDateFormat stm = new SimpleDateFormat("HH:mm");
+
+Date Basic_Start_Time = Tool.getDate8("00:00");
+ */
 %>
 
 <!DOCTYPE html> 
@@ -52,18 +58,17 @@ int day = Integer.parseInt(request.getParameter("day"));  */
      
       <li class='li_none'>
         <label for='mname' class='label_basic'>일정 종료 날짜</label>*<br>
-        <input type='date' style = 'width: 200px' name='work_enddate' required="required" id='work_enddate' >
+        <input type='date' style = 'width: 200px' name='work_enddate' id='work_enddate' required="required" >
         <input type='time' style = 'width: 150px' name='end_time' id='end_time' value = '00:00'>
      </li>
      
      <li class='li_none'>
         <label for='mname' class='label_basic'>공개 여부</label><br>
-          <label>
-            <input type='radio' name='visible' id='visible' value='Y' checked="checked"> 전체 공개
-          </label>
-          <label>
-            <input type='radio' name='visible' id='visible' value='N'> 비공개
-          </label>
+          <label for='visible'>공개 여부</label>
+       <select name='visible'>
+         <option value='Y' >전체공개</option>
+         <option value='N' selected="selected">비공개</option>
+       </select>
      </li>
                
       <li class='li_right'>

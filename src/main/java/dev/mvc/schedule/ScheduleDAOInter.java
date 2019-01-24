@@ -28,5 +28,12 @@ public interface ScheduleDAOInter {
    * 일정 삭제
    */
   public int delete_schedule(int scheduleno);
+  
+  /**
+   * 일정 시작 날짜와 일정 종료 날짜가 올바른지 검사합니다.
+   * @param session
+   * @return true: 날짜의 순서가 올바름
+   */
+  public int check_date(ScheduleVO scheduleVO);
 
 }

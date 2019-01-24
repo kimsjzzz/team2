@@ -25,8 +25,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   
   <update id="update" parameterType = "ScheduleVO">
     UPDATE SCHEDULE
-    SET work = #{work, jdbcType = VARCHAR}, work_startdate = #{work_startdate, jdbcType = VARCHAR}, work_enddate= #{work_enddate, jdbcType = VARCHAR},
-          start_time = #{start_time, jdbcType = VARCHAR}, end_time = #{end_time, jdbcType = VARCHAR}, visible = #{visible, jdbcType = VARCHAR}
+    SET work = #{work}, work_startdate = #{work_startdate}, work_enddate= #{work_enddate},
+          start_time = #{start_time}, end_time = #{end_time}, visible = #{visible}
     WHERE scheduleno = #{scheduleno, jdbcType = NUMERIC} 
   </update>
   
@@ -34,5 +34,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     DELETE FROM SCHEDULE
     WHERE scheduleno = #{scheduleno}
   </delete>
+  
+  <select id = "check_date" resultType = "int" parameterType = "ScheduleVO">
+    SELECT COUNT(*) as cnt
+    FROM SCHEDULE
+    WHERE TO_DATE(#{work_startdate}, 'YYYY-MM-DD') > TO_DATE(#{work_enddate}, 'YYYY-MM-DD')
+                             OR (TO_DATE(#{work_startdate}, 'YYYY-MM-DD') = TO_DATE(#{work_enddate}, 'YYYY-MM-DD')
+                             AND TO_DATE(#{start_time}, 'HH24:MI') > TO_DATE(#{end_time}, 'HH24:MI'))
+  </select>
+  
   
 </mapper>

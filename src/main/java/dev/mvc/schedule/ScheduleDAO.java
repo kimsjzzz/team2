@@ -39,6 +39,11 @@ public class ScheduleDAO implements ScheduleDAOInter {
   public int delete_schedule(int scheduleno) {
     return sqlSessionTemplate.delete("schedule.delete_schedule", scheduleno);
   }
+
+  @Override
+  public int check_date(ScheduleVO scheduleVO) {
+    return sqlSessionTemplate.selectOne("schedule.check_date", scheduleVO);
+  }
   
   
   

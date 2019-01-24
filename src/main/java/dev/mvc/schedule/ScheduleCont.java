@@ -46,18 +46,18 @@ public class ScheduleCont {
   public ModelAndView create(ScheduleVO scheduleVO, HttpSession session) {
     ModelAndView mav = new ModelAndView();
     int count = 0;
-    /*
-     if(scheduleProc.checkDate(session) == false){
-       count = 0;
-     mav.setViewName("redirect:/calendar/create_schedule_message.jsp?count=0");
+    
+     if(scheduleProc.check_date(scheduleVO) == 0){
+       count = scheduleProc.create(scheduleVO);
+       mav.setViewName("redirect:/calendar/create_schedule_message.jsp?count=" + count);
+       
       
-    } else if(scheduleProc.checkDate(session)== true) {
-      count = scheduleProc.create(scheduleVO);
+    } else {
+      count = 2;
       mav.setViewName("redirect:/calendar/create_schedule_message.jsp?count=" + count);
     }
-   */
-     count = scheduleProc.create(scheduleVO);
-     mav.setViewName("redirect:/calendar/create_schedule_message.jsp?count=" + count);
+     /*count = scheduleProc.create(scheduleVO);
+     mav.setViewName("redirect:/calendar/create_schedule_message.jsp?count=" + count);*/
     
     
     return mav;
@@ -117,19 +117,33 @@ public class ScheduleCont {
    * 일정 수정 폼
    * @param scheduleno
    * @return
-   */  
+   */
   @ResponseBody
-  @RequestMapping(value = "/calnedar/update_schedule.do", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
-  public String update_schedule(int scheduleno) {
-    System.out.println("--> update_schedule() GET executed");
-    
+  @RequestMapping(value = "/calendar/update_schedule.do", method = RequestMethod.GET, 
+                              produces = "text/plain;charset=UTF-8")
+  public ResponseEntity update_schedule(int scheduleno) {
+    HttpHeaders responseHeaders = new HttpHeaders();
+      
     ScheduleVO scheduleVO = scheduleProc.read_schedule(scheduleno);
     JSONObject obj = new JSONObject(scheduleVO);
-  
-
-    return obj.toString();
+    
+    obj.put("scheduleno", scheduleno);
+    obj.put("employeeno", scheduleVO.getEmployeeno());
+    obj.put("work", scheduleVO.getWork());
+    /*obj.put("work_startdate", Tool.getDate9(scheduleVO.getWork_startdate()));
+    obj.put("work_enddate", Tool.getDate9(scheduleVO.getWork_enddate()));
+    obj.put("start_time", Tool.getDate10(scheduleVO.getStart_time()));
+    obj.put("end_time", Tool.getDate10(scheduleVO.getEnd_time()));*/
+    obj.put("work_startdate",scheduleVO.getWork_startdate());
+    obj.put("work_enddate",scheduleVO.getWork_enddate());
+    obj.put("start_time",scheduleVO.getStart_time());
+    obj.put("end_time",scheduleVO.getEnd_time());
+    obj.put("visible", scheduleVO.getVisible());
+    
+    return new ResponseEntity(obj.toString(), responseHeaders, HttpStatus.CREATED);
+    // return obj.toString();
   }
-
+  
   /**
    * 일정 수정
    * 
@@ -138,7 +152,8 @@ public class ScheduleCont {
    * @return
    */
   @ResponseBody
-  @RequestMapping(value = "/calendar/update_schedule.do", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+  @RequestMapping(value = "/calendar/update_schedule_json.do", method = RequestMethod.POST, 
+                              produces = "text/plain;charset=UTF-8")
   public ResponseEntity update_json(RedirectAttributes redirectAttributes, HttpServletRequest request, ScheduleVO scheduleVO) {
     HttpHeaders responseHeaders = new HttpHeaders();
 
@@ -146,12 +161,7 @@ public class ScheduleCont {
     JSONArray msgs = new JSONArray();
 
     if (scheduleProc.update_schedule(scheduleVO) == 1) {
-      msgs.put("일정을 수정했습니다.");
-      msgs.put("수정된 일정 : " + scheduleVO.getWork());
-    } else {
-      msgs.put("일정 수정에 실패했습니다.");
-    }
-    json.put("msgs", msgs);
+      }
 
     return new ResponseEntity(json.toString(), responseHeaders, HttpStatus.CREATED);
   }
@@ -182,12 +192,7 @@ public class ScheduleCont {
     String work = scheduleProc.read_schedule(scheduleno).getWork();
     
     if (scheduleProc.delete_schedule(scheduleno) == 1) {
-      msgs.put("일정을 삭제했습니다.");
-      msgs.put("삭제된 일정 :  [" + work + "]");
-    } else {
-      msgs.put("[" + work + "] 일정 삭제에 실패했습니다.");
-      }
-    json.put("msgs", msgs);
+    }
 
     return new ResponseEntity(json.toString(), responseHeaders, HttpStatus.CREATED);
   }

@@ -17,6 +17,22 @@
     .list_left {
       text-align: left;
     }    
+    
+     /* 팝업 윈도우 */
+  .popup1 {
+    line-height: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    position: absolute;
+    top: 25%;
+    left: 35%;
+    width: 36%;
+    background-color: #cc99ff;
+    opacity: 1.0;
+    text-align: center;
+    color: #FFFFFF;
+  }
   </style>
 
 <script type="text/JavaScript"
@@ -35,8 +51,9 @@
 <script type="text/javascript">
   $(function() {
     action_cancel();
-    $('#panel_update').hide();
     $('#panel_delete').hide();
+    $('#panel_update').hide();
+    
     
     list();
 
@@ -46,7 +63,7 @@
   function list() {
     $.ajax({
       url: "./list_all_schedule_json.do", // 요청을 보낼주소
-      type: "get",  // or get
+      type: "GET",  // or get
       cache: false,
       dataType: "json", // 응답 데이터 형식, or json
       // data: "categrpno=" + categrpno, 
@@ -67,12 +84,10 @@
           } else {
             panel += "<TD class = 'list_center'>비공개</TD>";
           }
-          /* panel += "<TD class = 'list_center'>"+rdata[index].visible+"</TD>"; */
           panel += "<TD class = 'list_center'>";
-          panel += "  <A href=\"javascript:update_schedule("+rdata[index].scheduleno+")\">수정</A>";  
+          panel += "  <A href=\"javascript:update_schedule("+rdata[index].scheduleno+")\">수정</A>";
+          //panel += "  <A href = \"../calendar/update_schedule.jsp?scheduleno="+ rdata[index].scheduleno + "\">수정</A>";
           panel += "  <A href=\"javascript:delete_schedule("+rdata[index].scheduleno+")\">삭제</A>";
-          /* panel += "  <A href=\"javascript:seqnoUp("+rdata[index].categoryno+")\"><IMG src='./images/up.png' title='우선 순위 높임' style='width: 20px;'></A>";
-          panel += "  <A href=\"javascript:seqnoDown("+rdata[index].categoryno+")\"><IMG src='./images/down.png' title='우선 순위 감소' style='width: 20px;'></A>";  */
           panel += "</TD>";
           panel += "</TR>";
         }
@@ -99,11 +114,14 @@
   
   // 일정 수정
    function update_schedule(scheduleno) {
-    $('#panel_update').show();
+    // alert('update_schedule('+scheduleno+')');
+    // return;
+     $('#panel_update').show();
+     $('#panel_delete').hide();
     
     $.ajax({
       url: "./update_schedule.do", // 요청을 보낼주소
-      type: "get",  // or get
+      type: "GET",  // or get
       cache: false,
       dataType: "json", // 응답 데이터 형식, or json
       data: 'scheduleno=' + scheduleno,
@@ -141,26 +159,18 @@
   function update_submit() {
     $.ajax({
       url: "./update_schedule_json.do", // 요청을 보낼주소
-      type: "post",  // or get
+      type: "POST",  // or get
       cache: false,
       dataType: "json", // 응답 데이터 형식, or json
       data: $('#frm_update').serialize(), 
       // Ajax 통신 성공, JSP 정상 처리
       success: function(rdata) { // callback 함수
-        var panel = '';
-        panel += "<DIV id='panel' class='popup1' style='heigth: 250px;'>";
-        panel += '  알림<br>';
-        for(index=0; index < rdata.msgs.length; index++) {
-          panel += rdata.msgs[index]+'<br>';
-        }
-        panel += "  <button type='button' onclick=\"$('#main_panel').hide();\" class='popup_button'>닫기</button>";
-        panel += "</DIV>";
-        
+        alert("일정이 수정되었습니다.")
+                
         action_cancel();
         
         list();  // 전체 카테고리 목록
         
-        $('#main_panel').html(panel);
         $('#main_panel').show();
         
       },
@@ -183,6 +193,7 @@
 
   function action_cancel() {
     $('#panel_update').hide();
+    $('#panel_delete').hide();
 
   }
   
@@ -229,20 +240,12 @@
       data: $('#frm_delete').serialize(), 
       // Ajax 통신 성공, JSP 정상 처리
       success: function(rdata) { // callback 함수
-        var panel = '';
-        panel += "<DIV id='panel' class='popup1' style='heigth: 250px;'>";
-        panel += '  알림<br>';
-        for(index=0; index < rdata.msgs.length; index++) {
-          panel += rdata.msgs[index]+'<br>';
-        }
-        panel += "  <button type='button' onclick=\"$('#main_panel').hide();\" class='popup_button'>닫기</button>";
-        panel += "</DIV>";
+        alert("일정이 삭제되었습니다.")
         
         action_cancel();
         
         list();  // 전체 카테고리 목록
         
-        $('#main_panel').html(panel);
         $('#main_panel').show();
         
         // $('#frm_create')[0].reset(); // id가 frm_create인 첫번째폼을 reset
@@ -272,12 +275,8 @@
 <body>
   <DIV class='container' style='width: 90%;'>
     <DIV class='content'>
-
-      <ASIDE style='float: left;'>
-        <A href='./calendar.jsp'>캘린더</A>
-      </ASIDE>
       
-      <!-- 삭제 폼 -->
+<!-- 일정 삭제 폼 -->
       <DIV id='panel_delete' style='padding: 10px 0px 10px 0px; background-color: #FFAAAA; width: 100%; text-align: center;'>
     <FORM name='frm_delete' id='frm_delete'>
       <input type='hidden' name='scheduleno' id='scheduleno' value=''>
@@ -291,15 +290,15 @@
       
       
 <!-- 일정 수정 폼 -->
-  <DIV id='panel_update' style='padding: 10px 0px 10px 0px; background-color: #DDDDDD; width: 100%; text-align: left;'>  
+  <DIV id='panel_update' style='padding: 10px 0px 10px 0px; background-color: #BBBB; width: 100%; text-align: left;'>  
     <FORM name='frm_update' id='frm_update' method='POST' action='./update_schedule.do'>
-      <input type='hidden' name='scheduleno' id='scheduleno' value=''> 
+      <input type='hidden' name='scheduleno' id='scheduleno' value=''>
  
       <fieldset class='fieldset_no_line' style='width: 90%; margin: 0px auto;'>
       <ul>
         <li class='li_none'>
           <label for='work' class='label_basic'>일정</label>
-          <input type='text' name='work' id='work' required="required"> *
+          <input type='text' name='work' id='work' required="required" > *
         </li>
         
       <li class='li_none'>
@@ -315,23 +314,11 @@
       </li>
      
       <li class='li_none'>
-        <label for='mname' class='label_basic'>공개 여부</label><br>
-        <%-- <c:when test = "${scheduleVO.getVisible == 'Y' }"> --%>
-          <label>
-            <input type='radio' name='visible' id='visible' value='Y' checked="checked"> 전체 공개
-          </label>
-          <label>
-            <input type='radio' name='visible' id='visible' value='N'> 비공개
-          </label>
-          <%-- </c:when>
-          <c:otherwise>
-          <label>
-              <input type='radio' name='visible' id='visible' value='Y' > 전체 공개
-            </label>
-            <label>
-              <input type='radio' name='visible' id='visible' value='N' checked="checked"> 비공개
-            </label>
-          </c:otherwise> --%>
+        <label for='visible'>공개 여부</label>
+       <select name='visible'>
+         <option value='Y' >전체공개</option>
+         <option value='N' selected="selected">비공개</option>
+       </select>
       </li>
                
       <li class='li_right'>
@@ -365,32 +352,7 @@
           <TH class='list_center'>공개여부</TH>
           <TH class='list_center'>기타</TH>
         </TR>
-        <%-- <tbody>
-          <c:forEach var="scheduleVO" items="${list_all_schedule }">
-            <c:set var="scheduleno" value ="${scheduleVO.scheduleno }" /> 
-            <TR>
-              <TD class = 'list_center'>${scheduleVO.scheduleno}</TD>
-              <TD class = 'list_center'>${scheduleVO.employeeno}</TD>
-              <TD class = 'list_left'>${scheduleVO.work}</TD>
-              <TD class = 'list_center'>${scheduleVO.work_startdate} ${scheduleVO.start_time}</TD>
-              <TD class = 'list_center'>${scheduleVO.work_enddate} ${scheduleVO.end_time}</TD>
-              <TD class = 'list_center'>
-              <c:choose>
-                <c:when test ="${scheduleVO.visible == 'Y'}">
-                  전체공개
-                </c:when>
-                <c:otherwise>
-                  비공개
-                </c:otherwise>
-              </c:choose>
-              </TD>
-              <TD class = 'list_center'>
-                <A href = "../calendar/update_schedule.jsp?scheduleno=${scheduleVO.scheduleno }">수정</A>
-              </TD>
-
-            </TR>
-          </c:forEach>
-        </tbody> --%>
+        
         <tbody id='tbody_panel' data-nowPage='0' data-endPage='0'>
         </tbody>
       </TABLE>
