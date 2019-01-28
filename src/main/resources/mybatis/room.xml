@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="room"> <!-- 테이블명 사용 -->
+<!-- 회의실 등록 -->
+<insert id = "create_room" parameterType = "RoomVO">
+  INSERT INTO room(roomno, roomname, locate)
+  VALUES((SELECT NVL(MAX(roomno), 0)+1 as roomno FROM room), #{roomname}, #{locate})
+</insert>
+
+<select id = "list_room" resultType = "RoomVO">
+SELECT roomno, roomname, locate
+FROM room
+ORDER BY roomno ASC
+</select>
+
+<select id = "read_room" parameterType = "int" resultType = "RoomVO">
+  SELECT roomno, roomname, locate
+  FROM room
+  WHERE roomno = #{roomno}
+</select>
+
+<update id = "update_room" parameterType = "RoomVO" >
+  UPDATE room
+  SET roomname=#{roomname}, locate=#{locate}
+  WHERE roomno = #{roomno}
+</update>
+
+<delete id = "delete_room" parameterType = "int">
+  DELETE FROM room
+  WHERE roomno = #{roomno}
+</delete>
+
+</mapper> 
